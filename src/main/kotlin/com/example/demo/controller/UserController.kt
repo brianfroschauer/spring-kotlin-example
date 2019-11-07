@@ -1,7 +1,6 @@
 package com.example.demo.controller
 
 import com.example.demo.dto.*
-import com.example.demo.entity.User
 import com.example.demo.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -13,8 +12,8 @@ import javax.validation.Valid
 class UserController(@Autowired private val service: UserService) {
 
     @GetMapping
-    fun findAll(): ResponseEntity<List<User>> {
-        val users = service.findAll()
+    fun findAll(): ResponseEntity<List<UserDTO>> {
+        val users = service.findAll().map { user -> user.toUserDTO() }
         return ResponseEntity.ok(users)
     }
 
