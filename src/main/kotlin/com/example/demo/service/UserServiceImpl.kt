@@ -1,6 +1,7 @@
 package com.example.demo.service
 
 import com.example.demo.entity.User
+import com.example.demo.exception.NotFoundException
 import com.example.demo.repository.UserRepository
 import org.springframework.stereotype.Service
 
@@ -10,19 +11,19 @@ class UserServiceImpl(private val repository: UserRepository) : UserService {
     override fun findOne(id: Long): User {
        return repository
                .findById(id)
-               .orElseThrow { RuntimeException() }
+               .orElseThrow { NotFoundException() }
     }
 
     override fun findAll(): List<User> = repository.findAll()
 
     override fun create(user: User): User = repository.save(user)
 
-    override fun update(user: User): User {
+    override fun update(id: Long, user: User): User {
         return repository
-                .findById(user.id)
-                .map { old -> old.copy(firstName = user.firstName, lastName = user.lastName) }
-                .orElseThrow { RuntimeException() }
+                .findById(id)
+                .map { old -> repository.save(old.copy(firstName = user.firstName, lastName = user.lastName)) }
+                .orElseThrow { NotFoundException() }
     }
 
-    override fun delete(id: Long) = repository.deleteById(id)
+    override fun delete(id: Long) = repository.delete(findOne(id))
 }
