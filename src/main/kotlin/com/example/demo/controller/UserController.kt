@@ -1,5 +1,6 @@
 package com.example.demo.controller
 
+import com.example.demo.dto.*
 import com.example.demo.entity.User
 import com.example.demo.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,22 +19,22 @@ class UserController(@Autowired private val service: UserService) {
     }
 
     @GetMapping("/{id}")
-    fun findOne(@PathVariable("id") id: Long): ResponseEntity<User> {
+    fun findOne(@PathVariable("id") id: Long): ResponseEntity<UserDTO> {
         val user = service.findOne(id)
-        return ResponseEntity.ok(user)
+        return ResponseEntity.ok(user.toUserDTO())
     }
 
     @PostMapping
-    fun create(@Valid @RequestBody user: User): ResponseEntity<User> {
-        val created = service.create(user)
-        return ResponseEntity.ok(created)
+    fun create(@Valid @RequestBody createUserDTO: CreateUserDTO): ResponseEntity<UserDTO> {
+        val user = service.create(createUserDTO.toUser())
+        return ResponseEntity.ok(user.toUserDTO())
     }
 
     @PutMapping("/{id}")
     fun update(@PathVariable("id") id: Long,
-               @Valid @RequestBody user: User): ResponseEntity<User> {
-        val updated = service.update(user)
-        return ResponseEntity.ok(updated)
+               @Valid @RequestBody updateUserDTO: UpdateUserDTO): ResponseEntity<UserDTO> {
+        val user = service.update(id, updateUserDTO.toUser())
+        return ResponseEntity.ok(user.toUserDTO())
     }
 
     @DeleteMapping("/{id}")
