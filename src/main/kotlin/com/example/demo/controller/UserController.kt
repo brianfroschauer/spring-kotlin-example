@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 class UserController(@Autowired private val service: UserService) {
 
     @GetMapping
@@ -18,7 +18,7 @@ class UserController(@Autowired private val service: UserService) {
         return ResponseEntity.ok(users)
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     fun findOne(@PathVariable("id") id: Long): ResponseEntity<UserDTO> {
         val user = service.findOne(id)
         return ResponseEntity.ok(user.toUserDTO())
@@ -30,15 +30,15 @@ class UserController(@Autowired private val service: UserService) {
         return ResponseEntity.ok(user.toUserDTO())
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     fun update(@PathVariable("id") id: Long,
                @Valid @RequestBody updateUserDTO: UpdateUserDTO): ResponseEntity<UserDTO> {
         val user = service.update(id, updateUserDTO.toUser())
         return ResponseEntity.ok(user.toUserDTO())
     }
 
-    @DeleteMapping("/{id}")
-    fun delete(@PathVariable("id") id: Long): ResponseEntity<User> {
+    @DeleteMapping("{id}")
+    fun delete(@PathVariable("id") id: Long): ResponseEntity<UserDTO> {
         service.delete(id)
         return ResponseEntity.noContent().build()
     }
